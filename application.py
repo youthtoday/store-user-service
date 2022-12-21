@@ -347,7 +347,7 @@ def list_address():
 
 @application.route('/user/address/save', methods=['POST'])
 def add_address():
-    response_object = {'code': '001', 'data': []}
+    response_object = {'code': '001'}
     if request.method == 'POST':
         post_data = request.get_json()
 
@@ -356,10 +356,10 @@ def add_address():
             response_object["code"] = '004'
             return response_object
 
-        address = str(post_data.get('add.address')).strip(),
-        linkman = str(post_data.get('add.linkman')).strip(),
-        phone = str(post_data.get('add.phone')).strip(),
-        user_id = str(post_data.get('user_id')).strip()
+        address = post_data.get('add.address')
+        linkman = post_data.get('add.linkman')
+        phone = post_data.get('add.phone')
+        user_id = post_data.get('user_id')
 
         if address == '' or linkman == '' or phone == '' or user_id == '':
             response_object["code"] = '004'
