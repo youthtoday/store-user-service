@@ -124,7 +124,7 @@ def select_user_all():
 
 # 查询用户是否存在，根据username查询
 def select_by_username(username):
-    users = User.query.filter_by(username=username).all()
+    users = User.query.filter_by(user_name=username).all()
     return users
 
 
