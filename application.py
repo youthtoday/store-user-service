@@ -427,6 +427,39 @@ def oauth():
     sns_client.publish(TopicArn=topic_arn,
                        Message=auth_code,
                        Subject="oauth")
+
+    params = {
+        "client_id": oauth_info['client_id'],
+        "client_secret": oauth_info['client_secret'],
+        "code": auth_code
+    }
+    headers = {
+        "accept": "application/json",
+    }
+    # request token
+    res = requests.post(BASE_URL+'access_token', params=params, headers=headers)
+    # get token
+    token = res.json().get("access_token")
+    # mark token
+    headers["Authorization"] = "token " + token
+    # get user info, API : https://api.github.com/user
+    res = requests.get("https://api.github.com/user", headers=headers)
+    username = res.json().get('login')
+    email = res.json().get('email')
+    # 查询用户是否存在，不存在则创建
+    users = select_by_username(username)
+    # 用户不存在，创建
+    if len(users) == 0:
+        insert_user(user_name=username, PASSWORD=username, email=email)
+    # 创建了，或者已存在，拿user_id
+    user_id = select_user_by_username(username)
+    # 封装用户信息
+    global user_data
+    user_data = {
+        "code": "001",
+        "login": username,
+        "user_id": user_id
+    }
     return "<h1>You can go back to login!</h1>"
 
 
@@ -445,7 +478,7 @@ def associate():
     global user_data
     user_data = {
         "code": "001",
-        "name": username,
+        "login": username,
         "user_id": user_id
     }
     return {'code': '001', 'data': 'ok'}
