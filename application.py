@@ -452,7 +452,7 @@ def oauth():
     if len(users) == 0:
         insert_user(user_name=username, PASSWORD=username, email=email)
     # 创建了，或者已存在，拿user_id
-    user_id = select_user_by_username(username)
+    user_id = select_user_by_username(username)['user_id']
     # 封装用户信息
     global user_data
     user_data = {
@@ -473,7 +473,7 @@ def associate():
     if len(users) == 0:
         insert_user(user_name=username, PASSWORD=username, email=email)
     # 创建了，或者已存在，拿user_id
-    user_id = select_user_by_username(username)
+    user_id = select_user_by_username(username)['user_id']
     # 封装用户信息
     global user_data
     user_data = {
